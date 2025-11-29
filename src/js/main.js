@@ -1,6 +1,6 @@
 import { fetchDefinition } from './api.js';
 import { renderResult, renderError, renderHistory, toggleLoading } from './ui.js';
-import { storage, getRandomItem } from './utils.js';
+import { storage, getRandomItem, debounce } from './utils.js';
 
 const WORDS_OF_DAY = ['serendipity', 'ephemeral', 'eloquent', 'resilience', 'wanderlust', 'luminous', 'ethereal', 'sonder', 'vellichor'];
 
@@ -41,6 +41,11 @@ class DictionaryApp {
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.handleSearch();
         });
+
+        // Search as you type
+        searchInput.addEventListener('input', debounce(() => {
+            this.handleSearch();
+        }, 500));
 
         // Theme
         document.getElementById('theme-toggle').addEventListener('click', () => this.toggleTheme());
